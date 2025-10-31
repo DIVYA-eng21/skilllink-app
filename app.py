@@ -36,9 +36,12 @@ page_bg_img = """
 </style>
 """
 st.markdown(page_bg_img, unsafe_allow_html=True)
-
 if "conversation" not in st.session_state:
     st.session_state.conversation = []
+
+if "active" not in st.session_state:
+    st.session_state.active = True
+
 
 # ------------------ Model Loading ------------------
 @st.cache_resource
