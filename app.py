@@ -57,25 +57,34 @@ st.success("Model loaded successfully ✅")
 #st.image("logo.png", width=150)
 st.markdown("<h2 style='text-align:center;'>💼 SkillLink AI</h2>", unsafe_allow_html=True)
 st.write("Describe your skill in any language and I’ll predict your job title! 🌍")
+# ------------------ Chat Form ------------------
+st.markdown("### 💬 Chat with SkillLink AI")
 
-# ------------------ Chat Loop ------------------
-user_input = st.text_input("Enter your skill description (type 'quit' to end):")
+# Use form to prevent page reload
+with st.form(key="chat_form", clear_on_submit=True):
+    user_input = st.text_input("Enter your skill description (type 'quit' to end):")
+    submitted = st.form_submit_button("Send")
 
-if user_input:
+if submitted and user_input:
     if user_input.lower() == "quit":
+        st.session_state.active = False
         st.session_state.conversation.append(("user", user_input))
         st.session_state.conversation.append(("ai", "Session ended. Goodbye! 👋"))
-    else:
+    elif st.session_state.active:
+        # Translate input to English
         translated = translator.translate(user_input)
+
+        # Generate prediction
         input_text = f"Given a worker's skill description, generate a short job title.\nDescription: {translated}\nTitle:"
         inputs = tokenizer(input_text, return_tensors="pt")
         outputs = model.generate(**inputs, max_length=16)
         title = tokenizer.decode(outputs[0], skip_special_tokens=True)
 
+        # Save conversation
         st.session_state.conversation.append(("user", user_input))
         st.session_state.conversation.append(("ai", title))
 
-# ------------------ Display Conversation ------------------
+# ------------------ Display Chat ------------------
 for role, text in st.session_state.conversation:
     if role == "user":
         st.markdown(f"<div class='chat-bubble-user'><b>You:</b> {text}</div>", unsafe_allow_html=True)
