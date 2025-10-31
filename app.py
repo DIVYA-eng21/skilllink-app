@@ -54,7 +54,7 @@ translator = GoogleTranslator(source='auto', target='en')
 st.success("Model loaded successfully ✅")
 
 # ------------------ Title ------------------
-st.image("logo.png", width=150)
+#st.image("logo.png", width=150)
 st.markdown("<h2 style='text-align:center;'>💼 SkillLink AI</h2>", unsafe_allow_html=True)
 st.write("Describe your skill in any language and I’ll predict your job title! 🌍")
 
